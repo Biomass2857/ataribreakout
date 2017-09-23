@@ -18,12 +18,17 @@ class Ball
 		void setPosition(double, double);
 		void setRadius(double);
 		void setAbsVel(double);
-		void setAngle(double);	
+		void setAngle(double);
 		void addUp();
+		
+		void invertXVelocity();
+		void invertYVelocity();
 		
 		double getRadius();
 		Vector2f getPosition();
 		double getAngle();
+		
+		bool colliding(Ball&);
 		
 		void render(RenderWindow*);
 	protected:

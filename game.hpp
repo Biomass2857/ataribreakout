@@ -19,9 +19,12 @@ class Game
 		Game(Vector2u, string);
 		~Game();
 		
+		void delay(unsigned int);
+		
 		int start();
 		
 	protected:
+		Clock delayClock;
 		RenderWindow *window;
 		Pad pad;
 		Event event;

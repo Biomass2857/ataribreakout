@@ -22,12 +22,20 @@ Game::~Game()
 
 }
 
+void Game::delay(unsigned int ms)
+{
+	delayClock.restart();
+	while(delayClock.getElapsedTime().asMilliseconds() < ms);
+}
+
 int Game::start()
 {
 	srand(time(NULL));
 	window = new RenderWindow(VideoMode(resolution.x, resolution.y), title);
 	
 	bool spaceBlocking = false;
+	
+	pad.setSize(resolution);
 	
 	while(window->isOpen())
 	{
@@ -48,6 +56,8 @@ int Game::start()
 		else
 			spaceBlocking = false;
 			
+		delay(20);
+		
 		pad.update();
 		
 		window->clear(Color::White);

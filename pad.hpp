@@ -9,6 +9,7 @@ class Pad
 		Pad();
 		~Pad();
 		
+		void setSize(Vector2u);
 		void display(RenderWindow*);
 		
 		void update();
@@ -17,6 +18,7 @@ class Pad
 		void addBallsRandomly(unsigned int);
 	protected:
 		vector<Ball> balls;
+		Vector2u size;
 };
 
 #endif

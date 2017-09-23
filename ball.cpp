@@ -58,6 +58,18 @@ void Ball::addUp()
 	resetShape();
 }
 
+void Ball::invertXVelocity()
+{
+	velX = -velX;
+	angle = 360 * tan(velY / velX) / (2 * PI);
+}
+
+void Ball::invertYVelocity()
+{
+	velY = -velY;
+	angle = 360 * tan(velY / velX) / (2 * PI);
+}
+
 double Ball::getRadius()
 {
 	return radius;
@@ -68,6 +80,14 @@ Vector2f Ball::getPosition()
 	return Vector2f(x, y);
 }
 
+bool Ball::colliding(Ball &other)
+{
+	if(radius + other.getRadius() >= sqrt(pow(x - other.getPosition().x, 2) + pow(y - other.getPosition().y, 2)))
+		return true;
+	else
+		return false;
+}
+
 void Ball::render(RenderWindow *window)
 {
 	window->draw(shape);
@@ -75,9 +95,9 @@ void Ball::render(RenderWindow *window)
 
 void Ball::resetShape()
 {
+	shape.setOrigin(radius * 0.5, radius * 0.5);
 	shape.setPosition(x, y);
 	shape.setRadius(radius);
-	shape.setOrigin(radius * 0.5, radius * 0.5);
 	shape.setFillColor(col);
 }
 
