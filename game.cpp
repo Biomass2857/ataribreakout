@@ -24,7 +24,10 @@ Game::~Game()
 
 int Game::start()
 {
+	srand(time(NULL));
 	window = new RenderWindow(VideoMode(resolution.x, resolution.y), title);
+	
+	bool spaceBlocking = false;
 	
 	while(window->isOpen())
 	{
@@ -34,7 +37,21 @@ int Game::start()
 				window->close();
 		}
 		
+		if(Keyboard::isKeyPressed(Keyboard::Space))
+		{
+			if(!spaceBlocking)
+			{
+				spaceBlocking = true;
+				pad.addBallsRandomly(10);
+			}
+		}
+		else
+			spaceBlocking = false;
+			
+		pad.update();
+		
 		window->clear(Color::White);
+		pad.display(window);
 		window->display();
 	}
 	

@@ -5,7 +5,9 @@
 #include <vector>
 #include <fstream>
 #include <cstdlib>
+#include <ctime>
 #include <cmath>
+#include "pad.hpp"
 
 using namespace std;
 using namespace sf;
@@ -21,6 +23,7 @@ class Game
 		
 	protected:
 		RenderWindow *window;
+		Pad pad;
 		Event event;
 		Vector2u resolution;
 		string title;
