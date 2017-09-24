@@ -34,7 +34,7 @@ void Pad::update()
 		if(balls.at(i).getRadius() + balls.at(i).getPosition().y < 0 || balls.at(i).getRadius() + balls.at(i).getPosition().y >= size.y)
 			balls.at(i).invertYVelocity();
 			
-		for(size_t p = 0; p < balls.size(); p++)
+		/*for(size_t p = 0; p < balls.size(); p++)
 		{
 			if(p != i)
 			{
@@ -46,6 +46,27 @@ void Pad::update()
 					balls.at(p).invertYVelocity();
 				}
 			}
+		}*/
+		
+		for(size_t p = 0; p < blocks.size(); p++)
+		{
+			if(balls.at(i).collidingX(blocks.at(p)))
+			{
+				blocks.at(p).hit();
+				balls.at(i).invertXVelocity();
+			}
+			
+			if(balls.at(i).collidingY(blocks.at(p)))
+			{
+				blocks.at(p).hit();
+				balls.at(i).invertYVelocity();
+			}
+			
+			if(blocks.at(p).canBeDeleted())
+			{
+				blocks.erase(blocks.begin() + p);
+				p--;
+			}
 		}
 	}
 }
@@ -54,7 +75,7 @@ void Pad::addBallsRandomly(unsigned int count)
 {
 	for(size_t i = 0; i < count; i++)
 	{
-		balls.push_back(Ball(7, rand() % size.x, rand() % size.y, double(rand() % 10) + 1, double(rand() % 45) + 22.5));
+		balls.push_back(Ball(7, rand() % size.x, rand() % size.y, double(rand() % 5) + 7, double(rand() % 81) + 5));
 	}
 }
 

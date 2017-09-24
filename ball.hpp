@@ -2,6 +2,7 @@
 #define BALL_HPP
 #include <SFML/Graphics.hpp>
 #include <cmath>
+#include "block.hpp"
 
 #define PI atan(1) * 4
 
@@ -28,7 +29,12 @@ class Ball
 		Vector2f getPosition();
 		double getAngle();
 		
+		// Only 4 fun
 		bool colliding(Ball&);
+		
+		// ÜBERARBEITEN
+		bool collidingX(Block&);
+		bool collidingY(Block&);
 		
 		void render(RenderWindow*);
 	protected:
@@ -43,6 +49,7 @@ class Ball
 		double angle;
 		double velX, velY, absVel;
 		double x, y;
+		bool isColliding;
 };
 
 #endif
