@@ -15,6 +15,11 @@ void Pad::display(RenderWindow *window)
 	{
 		balls.at(i).render(window);
 	}
+	
+	for(size_t i = 0; i < blocks.size(); i++)
+	{
+		blocks.at(i).render(window);
+	}
 }
 		
 void Pad::update()
@@ -50,5 +55,13 @@ void Pad::addBallsRandomly(unsigned int count)
 	for(size_t i = 0; i < count; i++)
 	{
 		balls.push_back(Ball(7, rand() % size.x, rand() % size.y, double(rand() % 10) + 1, double(rand() % 45) + 22.5));
+	}
+}
+
+void Pad::addBlocksRandomly(unsigned int count)
+{
+	for(size_t i = 0; i < count; i++)
+	{
+		blocks.push_back(Block(Vector2u(50, 50), rand() % size.x, rand() % size.y, (rand() % 512) + 512));
 	}
 }

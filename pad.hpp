@@ -1,7 +1,9 @@
 #ifndef PAD_HPP
 #define PAD_HPP
 #include <vector>
+#include <iostream>
 #include "ball.hpp"
+#include "block.hpp"
 
 class Pad
 {
@@ -16,8 +18,11 @@ class Pad
 		
 		// Debug
 		void addBallsRandomly(unsigned int);
+		
+		void addBlocksRandomly(unsigned int);
 	protected:
 		vector<Ball> balls;
+		vector<Block> blocks;
 		Vector2u size;
 };
 

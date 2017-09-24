@@ -34,6 +34,7 @@ int Game::start()
 	window = new RenderWindow(VideoMode(resolution.x, resolution.y), title);
 	
 	bool spaceBlocking = false;
+	unsigned prog = 0;
 	
 	pad.setSize(resolution);
 	
@@ -50,7 +51,8 @@ int Game::start()
 			if(!spaceBlocking)
 			{
 				spaceBlocking = true;
-				pad.addBallsRandomly(10);
+				pad.addBlocksRandomly(1);
+				pad.addBallsRandomly(3);
 			}
 		}
 		else

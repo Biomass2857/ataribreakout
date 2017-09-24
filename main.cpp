@@ -8,7 +8,7 @@ using namespace sf;
 
 int main(int argc, char **argv)
 {
-	Game atari(Vector2u(500, 700), "Atari breakout");
+	Game atari(Vector2u(700, 800), "Atari breakout");
 	
 	return atari.start();
 }
