@@ -20,6 +20,11 @@ class Pad
 		void addBallsRandomly(unsigned int);
 		
 		void addBlocksRandomly(unsigned int);
+		
+		void spawnTest();
+		// Debug
+		
+		void shiftRow();
 	protected:
 		vector<Ball> balls;
 		vector<Block> blocks;

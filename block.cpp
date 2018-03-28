@@ -6,6 +6,7 @@ Block::Block()
 {
 	hitCount = 1;
 	size = Vector2u(100, 100);
+	position = Vector2f(0, 0);
 	font.loadFromFile("mono.ttf");
 	text.setFont(font);
 	resetShapeNText();
@@ -93,7 +94,7 @@ void Block::render(RenderWindow *window)
 
 void Block::resetShapeNText()
 {
-	bgColor = getColorFromGradient(hitCount, pow(2, 10), defaultGradient);
+	bgColor = getColorFromGradient(hitCount, pow(2, 7), defaultGradient);
 	shape.setFillColor(bgColor);
 	shape.setSize(Vector2f(size.x, size.y));
 	shape.setPosition(position.x, position.y);

@@ -1,8 +1,18 @@
 #include "ball.hpp"
 
+collisionpacket::collisionpacket()
+{
+	is = false;
+	angle = 0;
+}
+
+collisionpacket::~collisionpacket() {}
+
 Ball::Ball()
 {
-	isColliding = false;
+	isCollidingX = false;
+	isCollidingY = false;
+	isCollidingCorner = false;
 	x = 0;
 	y = 0;
 	radius = 5;
@@ -15,7 +25,9 @@ Ball::Ball()
 
 Ball::Ball(double tradius, double tx, double ty, double tabsvel, double tangle)
 {
-	isColliding = false;
+	isCollidingX = false;
+	isCollidingY = false;
+	isCollidingCorner = false;
 	radius = tradius;
 	x = tx;
 	y = ty;
@@ -49,7 +61,14 @@ void Ball::setAbsVel(double vel)
 
 void Ball::setAngle(double tangle)
 {
+	while(tangle < 0)
+		tangle += 360;
+	
+	while(tangle >= 360)
+		tangle -= 360;
+	
 	angle = tangle;
+	
 	reCalcVelocities();
 }
 
@@ -63,13 +82,45 @@ void Ball::addUp()
 void Ball::invertXVelocity()
 {
 	velX = -velX;
-	angle = 360 * tan(velY / velX) / (2 * PI);
+	if(velX == 0)
+	{
+		if(velY > 0)
+		{
+			angle = 90;
+		}
+		else if(velY < 0)
+		{
+			angle = 270;
+		}
+		else if(velY == 0)
+		{
+			angle = 0; // There's no undefined in C++
+		}
+	}
+	else
+		angle = 180 * atan(velY / velX) / PI;
 }
 
 void Ball::invertYVelocity()
 {
 	velY = -velY;
-	angle = 360 * tan(velY / velX) / (2 * PI);
+	if(velX == 0)
+	{
+		if(velY > 0)
+		{
+			angle = 90;
+		}
+		else if(velY < 0)
+		{
+			angle = 270;
+		}
+		else if(velY == 0)
+		{
+			angle = 0; // There's no undefined in C++
+		}
+	}
+	else
+		angle = 180 * atan(velY / velX) / PI;
 }
 
 double Ball::getRadius()
@@ -80,6 +131,11 @@ double Ball::getRadius()
 Vector2f Ball::getPosition()
 {
 	return Vector2f(x, y);
+}
+
+double Ball::getAngle()
+{
+	return angle;
 }
 
 bool Ball::colliding(Ball &other)
@@ -100,9 +156,9 @@ bool Ball::collidingX(Block &other)
 		{
 			if(y + radius < other.getPosition().y + other.getSize().y && y - radius > other.getPosition().y)
 			{
-				if(!isColliding)
+				if(!isCollidingX)
 				{
-					isColliding = true;
+					isCollidingX = true;
 					return true;
 				}
 				else
@@ -110,19 +166,19 @@ bool Ball::collidingX(Block &other)
 			}
 			else
 			{
-				isColliding = false;
+				isCollidingX = false;
 				return false;
 			}
 		}
 		else
 		{
-			isColliding = false;
+			isCollidingX = false;
 			return false;	
 		}
 	}
 	else
 	{
-		isColliding = false;
+		isCollidingX = false;
 		return false;
 	}
 }
@@ -135,9 +191,9 @@ bool Ball::collidingY(Block &other)
 		{
 			if(x + radius < other.getPosition().x + other.getSize().x && x - radius > other.getPosition().x)
 			{
-				if(!isColliding)
+				if(!isCollidingY)
 				{
-					isColliding = true;
+					isCollidingY = true;
 					return true;
 				}
 				else
@@ -145,21 +201,60 @@ bool Ball::collidingY(Block &other)
 			}
 			else
 			{
-				isColliding = false;
+				isCollidingY = false;
 				return false;
 			}
 		}
 		else
 		{
-			isColliding = false;
+			isCollidingY = false;
 			return false;
 		}
 	}
 	else
 	{
-		isColliding = false;
+		isCollidingY = false;
 		return false;
 	}
+}
+
+struct collisionpacket Ball::cornerCollision(Block &other)
+{
+	struct collisionpacket ret;
+	
+	ret.angle = 0;
+	ret.is = ((radius >= sqrt(pow(other.getPosition().x - x, 2) + pow(other.getPosition().y - y, 2)) || radius >= sqrt(pow(other.getPosition().x + other.getSize().x - x, 2) + pow(other.getPosition().y - y, 2)) || radius >= sqrt(pow(other.getPosition().x - x, 2) + pow(other.getPosition().y + other.getSize().y - y, 2)) || radius >= sqrt(pow(other.getPosition().x + other.getSize().x - x, 2) + pow(other.getPosition().y + other.getSize().y - y, 2))) && ((x < other.getPosition().x || x > other.getPosition().x + other.getSize().x) && (y < other.getPosition().y || y > other.getPosition().y + other.getSize().y)));
+	
+	if(ret.is)
+	{
+		if(!isCollidingCorner)
+		{
+			isCollidingCorner = true;
+			if(x < other.getPosition().x && y < other.getPosition().y)
+				ret.angle = 180 * atan((other.getPosition().x - x) / (other.getPosition().y - y)) / PI;
+			
+			if(x > other.getPosition().x + other.getSize().x && y < other.getPosition().y)
+				ret.angle = 180 * atan((other.getPosition().x + other.getSize().x - x) / (other.getPosition().y - y)) / PI;
+			
+			if(x > other.getPosition().x && y > other.getPosition().y + other.getSize().y)
+				ret.angle = 180 * atan((other.getPosition().x - x) / (other.getPosition().y + other.getSize().y - y)) / PI;
+			
+			if(x > other.getPosition().x + other.getSize().x && y > other.getPosition().y + other.getSize().y)
+				ret.angle = 180 * atan((other.getPosition().x + other.getSize().x - x) / (other.getPosition().y + other.getSize().y - y)) / PI;
+			
+			if(x > other.getPosition().x && y > other.getPosition().y && x < other.getPosition().x + other.getSize().x && y < other.getPosition().y + other.getSize().y)
+				ret.is = false;
+			
+			return ret;
+		}
+		else
+		{
+			ret.is = false;
+			return ret;
+		}
+	}
+	else
+		return ret;
 }
 
 // ÜBERARBEITEN

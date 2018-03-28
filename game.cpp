@@ -7,12 +7,12 @@ Game::Game()
 {
 	title = "Unknown Game";
 	resolution = Vector2u(600, 600);
-	window = nullptr;
+	window = NULL;
 }
 
 Game::Game(Vector2u res, string ttitle)
 {
-	window = nullptr;
+	window = NULL;
 	resolution = res;
 	title = ttitle;
 }
@@ -34,7 +34,9 @@ int Game::start()
 	window = new RenderWindow(VideoMode(resolution.x, resolution.y), title);
 	
 	bool spaceBlocking = false;
-	unsigned prog = 0;
+	bool rblocking = false;
+	unsigned int steps = 1;
+	bool running = false;
 	
 	pad.setSize(resolution);
 	
@@ -51,16 +53,42 @@ int Game::start()
 			if(!spaceBlocking)
 			{
 				spaceBlocking = true;
-				pad.addBlocksRandomly(1);
-				pad.addBallsRandomly(3);
+				pad.shiftRow();
+				pad.addBallsRandomly(14);
+				//pad.spawnTest();
 			}
 		}
 		else
 			spaceBlocking = false;
 			
-		delay(20);
+		delay(8);
 		
-		pad.update();
+		if(Keyboard::isKeyPressed(Keyboard::R))
+		{
+			if(!rblocking)
+			{
+				rblocking = true;
+				running = !running;
+			}
+		}
+		else
+			rblocking = false;
+		
+		if(Keyboard::isKeyPressed(Keyboard::A))
+			steps++;
+		
+		if(Keyboard::isKeyPressed(Keyboard::S))
+		{
+			if(steps > 1)
+				steps--;
+		}
+		
+		if(Keyboard::isKeyPressed(Keyboard::Num0))
+			steps = 1;
+		
+		if(Keyboard::isKeyPressed(Keyboard::K) || running)
+			for(size_t stepsNow = 0; stepsNow < steps; stepsNow++)
+				pad.update();
 		
 		window->clear(Color::White);
 		pad.display(window);

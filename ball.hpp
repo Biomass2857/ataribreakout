@@ -4,10 +4,18 @@
 #include <cmath>
 #include "block.hpp"
 
-#define PI atan(1) * 4
+const double PI = atan(1) * 4;
 
 using namespace std;
 using namespace sf;
+
+struct collisionpacket
+{
+	collisionpacket();
+	~collisionpacket();
+	bool is;
+	double angle;
+};
 
 class Ball
 {
@@ -36,6 +44,8 @@ class Ball
 		bool collidingX(Block&);
 		bool collidingY(Block&);
 		
+		struct collisionpacket cornerCollision(Block&);
+				
 		void render(RenderWindow*);
 	protected:
 		void resetShape();
@@ -49,7 +59,9 @@ class Ball
 		double angle;
 		double velX, velY, absVel;
 		double x, y;
-		bool isColliding;
+		bool isCollidingX;
+		bool isCollidingY;
+		bool isCollidingCorner;
 };
 
 #endif
